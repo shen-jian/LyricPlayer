@@ -135,18 +135,18 @@ public class LyricView extends View {
         drawText(currentLine, canvas, drawY + mLineOffset);
 
         // 需要绘制已播放行数
-        int alreadyPlayedCount = (int) Math.ceil((double) (mMaxLines - 1) / 2);
+        int hasPlayedCount = (int) Math.ceil((double) (mMaxLines - 1) / 2);
         // 需要绘制即将播放行数
-        int soonPlayCount = (int) Math.floor((double) (mMaxLines - 1) / 2);
+        int willPlayCount = (int) Math.floor((double) (mMaxLines - 1) / 2);
 
         // 绘制已播放歌词
         mPaint.setColor(mTextColor);
-        for (int i = 1; i <= alreadyPlayedCount; i++) {
+        for (int i = 1; i <= hasPlayedCount; i++) {
             int index = mCurrentIndex - i;
             if (index < 0) {
                 break;
             }
-            int alpha = mMaxTextAlpha - (mMaxTextAlpha - mMinTextAlpha) / (alreadyPlayedCount + 1) * i;
+            int alpha = mMaxTextAlpha - (mMaxTextAlpha - mMinTextAlpha) / (hasPlayedCount + 1) * i;
             mPaint.setAlpha(alpha);
             String line = mLyrics.get(index).getContent();
             drawY = drawY - getNumberOfRows(line) * mTextHeight - mLineSpace;
@@ -155,12 +155,12 @@ public class LyricView extends View {
 
         // 绘制即将播放歌词
         drawY = mHeight / 2 + getNumberOfRows(currentLine) * mTextHeight + mLineSpace;
-        for (int i = 1; i <= soonPlayCount; i++) {
+        for (int i = 1; i <= willPlayCount; i++) {
             int index = mCurrentIndex + i;
             if (index > mLyrics.size() - 1) {
                 break;
             }
-            int alpha = mMaxTextAlpha - (mMaxTextAlpha - mMinTextAlpha) / (soonPlayCount + 1) * i;
+            int alpha = mMaxTextAlpha - (mMaxTextAlpha - mMinTextAlpha) / (willPlayCount + 1) * i;
             mPaint.setAlpha(alpha);
             String line = mLyrics.get(index).getContent();
             drawText(line, canvas, drawY + mLineOffset);
