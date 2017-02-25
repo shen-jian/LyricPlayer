@@ -19,6 +19,8 @@ import me.shenj.lyric.LyricView;
 
 public class MainActivity extends Activity implements OnClickListener {
 
+    private static final String TAG = "MainActivity";
+
     private static final int SELECT_MUSIC_REQUEST_CODE = 1;
     private static final int SELECT_LRC_REQUEST_CODE = 2;
     private String mMusicPath = "";

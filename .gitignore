@@ -1,0 +1,12 @@
+.gradle/
+.idea/
+LyricPlayer.iml
+build/
+gradle/
+gradlew
+gradlew.bat
+local.properties
+lyric/build/
+lyric/lyric.iml
+sample/build/
+sample/sample.iml

@@ -71,14 +71,15 @@ public class LyricView extends View {
         initView();
     }
 
-    /**
-     * onSizeChanged()在onDraw()之前调用，可以在这里获取View的宽高
-     */
     @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        super.onSizeChanged(w, h, oldw, oldh);
-        mWidth = w;
-        mHeight = h;
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        // 根据歌词行数、行间距、字体大小设定最小尺寸
+        int minSize = (mTextHeight + mLineSpace) * mMaxLines;
+        int minWidth = Math.max(getSuggestedMinimumWidth(), minSize);
+        int minHeight = Math.max(getSuggestedMinimumHeight(), minSize);
+        mWidth = resolveSize(minWidth, widthMeasureSpec);
+        mHeight = resolveSize(minHeight, heightMeasureSpec);
+        setMeasuredDimension(mWidth, mHeight);
     }
 
     private void initAttribute(Context context, AttributeSet attrs) {
@@ -127,6 +128,9 @@ public class LyricView extends View {
             return;
         }
 
+        int c = canvas.save();
+        canvas.clipRect(getPaddingLeft(), getPaddingTop(), mWidth - getPaddingRight(),
+                mHeight - getPaddingBottom());
         // 绘制当前播放歌词行
         mPaint.setColor(mCurrentTextColor);
         mPaint.setAlpha(mMaxTextAlpha);
@@ -166,8 +170,14 @@ public class LyricView extends View {
             drawText(line, canvas, drawY + mLineOffset);
             drawY = drawY + getNumberOfRows(line) * mTextHeight + mLineSpace;
         }
+
+        canvas.restoreToCount(c);
     }
 
+    /**
+     * 传入歌词内容
+     * @param lyrics 歌词列表
+     */
     public void setLyricContent(List<Lyric> lyrics) {
         mLyrics = lyrics;
     }
@@ -247,11 +257,13 @@ public class LyricView extends View {
      * @param y
      */
     private void drawText(String text, Canvas canvas, float y) {
-        int status = canvas.save();
+        int c = canvas.save();
         canvas.translate(mWidth / 2, y);
         int w = mWidth - getPaddingLeft() - getPaddingRight();
-        StaticLayout layout = new StaticLayout(text, mPaint, w, Alignment.ALIGN_NORMAL, 1.0f, 0, false);
-        layout.draw(canvas);
-        canvas.restoreToCount(status);
+        if (w > 0) {
+            StaticLayout layout = new StaticLayout(text, mPaint, w, Alignment.ALIGN_NORMAL, 1.0f, 0, false);
+            layout.draw(canvas);
+        }
+        canvas.restoreToCount(c);
     }
 }
